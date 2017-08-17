@@ -1,5 +1,7 @@
 package com.jukica.game.sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +16,7 @@ public class Obstacle {
     private Vector2 posObstacle;
     private Random rand;
 
-    public Obstacle(float x, float y){
+    public Obstacle(float x, float y) {
         obstacle = new Texture("obstacle.png");
         rand = new Random();
         posObstacle = new Vector2(x + rand.nextInt(FLUCTUATION), y);

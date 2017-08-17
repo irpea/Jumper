@@ -1,6 +1,7 @@
 package com.jukica.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,6 +30,8 @@ public class PlayState extends State {
     private int score;
     private String scoreCount;
     private BitmapFont bitmapFont;
+    private Sound mali;
+    private Sound veliki;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -46,7 +49,8 @@ public class PlayState extends State {
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             obstacles.add(new Obstacle(i * (OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH), getGroundHeight()));
         }
-
+        mali = Gdx.audio.newSound(Gdx.files.internal("mali.mp3"));
+        veliki = Gdx.audio.newSound(Gdx.files.internal("veliki.mp3"));
         score = 0;
         scoreCount = "Score: 0";
         bitmapFont = new BitmapFont();
@@ -79,9 +83,14 @@ public class PlayState extends State {
         for (int i = 0; i < OBSTACLE_COUNT; i++) {
             Obstacle obstacle = obstacles.get(i);
             if (cam.position.x - (cam.viewportWidth / 1.5f) > obstacle.getPosObstacle().x + obstacle.getObstacle().getWidth()) {
-                obstacle.reposition(obstacle.getPosObstacle().x + ((OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH) * OBSTACLE_COUNT), getGroundHeight());
+                    obstacle.reposition(obstacle.getPosObstacle().x + ((OBSTACLE_SPACING + Obstacle.OBSTACLE_WIDTH) * OBSTACLE_COUNT), getGroundHeight());
                 score++;
                 scoreCount = "score: " + score;
+                if(score < 50 && score % 2 == 0){
+                    mali.play();
+                } else if (score >= 50 && score % 2 == 0){
+                    veliki.play();
+                }
             }
             if (obstacle.collides(ball.getBoundsBall())) {
                 endgame();
@@ -130,6 +139,9 @@ public class PlayState extends State {
         ball.dispose();
         for (Obstacle obstacle : obstacles)
             obstacle.dispose();
+        mali.dispose();
+        veliki.dispose();
+        bitmapFont.dispose();
         System.out.println("Play State disposed");
     }
 }
